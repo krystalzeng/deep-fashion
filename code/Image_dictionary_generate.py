@@ -190,17 +190,5 @@ def generate_image_dict(filtered_images, image_paths):
 	    img_info_dict[image_url][group_url]['Time elapsed'] = convert_date_into_num(time_elapsed)
 	    img_group_url_dict[image_url].add(group_url)
 
-	for unique_img in unique_img_url:
-	    for group in img_group_url_dict[unique_img]:
-	        likes = float(img_info_dict[unique_img][group]['Likes'])
-	        views = float(img_info_dict[unique_img][group]['Meta views'])
-	        time_elapsed = float(img_info_dict[unique_img][group]['Time elapsed'])
-	        percentage = likes / views * 100.0
-	        # Assuming the boundary is 100 views per day
-	        percentage2 = views / (time_elapsed*100) * 100.0
-	        percentage = 100.0 if percentage > 100.0 else percentage
-	        img_info_dict[unique_img][group]['Likes vs. Views (%)'] = percentage
-	        img_info_dict[unique_img][group]['Views vs. Time elapsed (%)'] = percentage2
-
 	return img_group_url_dict, img_info_dict
 
