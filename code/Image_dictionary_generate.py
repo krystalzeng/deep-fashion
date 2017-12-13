@@ -170,34 +170,37 @@ def generate_image_dict(filtered_images, image_paths):
 	img_group_url_dict = defaultdict(set)
 
 	for i in range(0, len(filtered_df)):
-		image_url = filtered_df['image_url'].values[i]
-		group_url = filtered_df['group_url'].values[i]
-		set_likes = filtered_df['set_likes'].values[i]
-		meta_views = find_views(filtered_df['meta_views'].values[i])
-		time_elapsed = find_time_elapsed(filtered_df['meta_views'].values[i])
-		if image_url not in img_info_dict:
-			img_info_dict[image_url] = defaultdict()
-			img_info_dict[image_url][group_url] = defaultdict()
-			
-		elif group_url not in img_info_dict[image_url]:
-			img_info_dict[image_url][group_url] = defaultdict()
-		img_info_dict[image_url][group_url]['Meta views'] = meta_views
-		img_info_dict[image_url][group_url]['Likes'] = convert_word_into_number(set_likes)
-		img_info_dict[image_url][group_url]['Time elapsed'] = convert_date_into_num(time_elapsed)
-		img_group_url_dict[image_url].add(group_url)
+	    image_url = filtered_df['image_url'].values[i]
+	    group_url = filtered_df['group_url'].values[i]
+	    set_likes = filtered_df['set_likes'].values[i]
+	    categories = filtered_df['item_category'].values[i]
+	    meta_views = find_views(filtered_df['meta_views'].values[i])
+	    time_elapsed = find_time_elapsed(filtered_df['meta_views'].values[i])
+	    if image_url not in img_info_dict:
+	        img_info_dict[image_url] = defaultdict()
+	        img_info_dict[image_url][group_url] = defaultdict()
+	        
+	    elif group_url not in img_info_dict[image_url]:
+	        img_info_dict[image_url][group_url] = defaultdict()
+
+	    img_info_dict[image_url]['path'] = image_paths[image_url]['path']
+	    img_info_dict[image_url]['category'] = categories
+	    img_info_dict[image_url][group_url]['Meta views'] = meta_views
+	    img_info_dict[image_url][group_url]['Likes'] = convert_word_into_number(set_likes)
+	    img_info_dict[image_url][group_url]['Time elapsed'] = convert_date_into_num(time_elapsed)
+	    img_group_url_dict[image_url].add(group_url)
 
 	for unique_img in unique_img_url:
-		img_info_dict[unique_img]['path'] = image_paths[unique_img]['path']
-		for group in img_group_url_dict[unique_img]:
-			likes = float(img_info_dict[unique_img][group]['Likes'])
-			views = float(img_info_dict[unique_img][group]['Meta views'])
-			time_elapsed = float(img_info_dict[unique_img][group]['Time elapsed'])
-			percentage = likes / views * 100.0
-			# Assuming the boundary is 100 views per day
-			percentage2 = views / (time_elapsed*100) * 100.0
-			percentage = 100.0 if percentage > 100.0 else percentage
-			img_info_dict[unique_img][group]['Likes vs. Views (%)'] = percentage
-			img_info_dict[unique_img][group]['Views vs. Time elapsed (%)'] = percentage2
+	    for group in img_group_url_dict[unique_img]:
+	        likes = float(img_info_dict[unique_img][group]['Likes'])
+	        views = float(img_info_dict[unique_img][group]['Meta views'])
+	        time_elapsed = float(img_info_dict[unique_img][group]['Time elapsed'])
+	        percentage = likes / views * 100.0
+	        # Assuming the boundary is 100 views per day
+	        percentage2 = views / (time_elapsed*100) * 100.0
+	        percentage = 100.0 if percentage > 100.0 else percentage
+	        img_info_dict[unique_img][group]['Likes vs. Views (%)'] = percentage
+	        img_info_dict[unique_img][group]['Views vs. Time elapsed (%)'] = percentage2
 
 	return img_group_url_dict, img_info_dict
 
