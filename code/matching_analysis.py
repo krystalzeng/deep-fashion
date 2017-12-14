@@ -20,6 +20,12 @@ class matching_analysis():
 				return True
 		return False
 
+	def if_in_same_category(self, img1, img2):
+		if self.img_info_dict[img1]['category'] == self.img_info_dict[img2]['category']:
+			return True
+		else:
+			return False
+
 	def common_group(self, img1, img2):
 		groups_for_img1 = self.img_group_url_dict[img1]
 		groups_for_img2 = self.img_group_url_dict[img2]
@@ -99,7 +105,7 @@ class matching_analysis():
 
 	def matching_percentage(self, img1, img2):
 		matching_percent = 0.0
-		if self.if_in_same_group(img1, img2) == True:
+		if self.if_in_same_group(img1, img2) == True and self.if_in_same_category(img1, img2) == False:
 			#print('Within same group')
 			matching_percent = 50.0
 			common_group = self.common_group(img1, img2)
@@ -127,9 +133,28 @@ class matching_analysis():
 	def matching_discrete(self, img1, img2):
 		if self.if_in_same_group(img1, img2) == True:
 			return 1.0
-
 		else:
 			return 0.0
+	
+	def generat_matches(self):
+		bound = 2000
+		matches = []
+		mismatches = []
+		for img1 in self.unique_image_urls[:bound]:
+			for img2 in self.unique_image_urls[:bound]:
+				if img1 != img2:
+					percentage = self.matching_percentage(img1, img2) 
+					img1path = self.img_info_dict[img1]['path']
+					img2path = self.img_info_dict[img2]['path']
+					img1category= self.img_info_dict[img1]['category']
+					img2category= self.img_info_dict[img2]['category']
+					if percentage < 50.0:
+						mismatches.append((img1path, img2path, img1category, img2category, percentage))
+					else:
+						matches.append((img1path, img2path, img1category, img2category, percentage))
+		return matches, mismatches
+
+		
 
 
 
