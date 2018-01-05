@@ -5,7 +5,7 @@ class matching_analysis():
 	def __init__(self, img_group_dict, img_dict, unique_urls):
 		self.img_info_dict = img_dict
 		self.img_group_url_dict = img_group_dict
-		self.unique_image_urls = unique_urls
+		self.unique_image_urls = list(unique_urls)
 		self.views_per_day = 100.0
 		self.likes_per_day = 50.0
 		self.average_lv = 0.0
@@ -135,27 +135,23 @@ class matching_analysis():
 			return 1.0
 		else:
 			return 0.0
-	
-	def generat_matches(self):
-		bound = 2000
+
+	# Generate matches depending on the size of training set, return a list of tuples for matches and mismatches
+	def generate_matches(self, bound):
 		matches = []
 		mismatches = []
+
 		for img1 in self.unique_image_urls[:bound]:
 			for img2 in self.unique_image_urls[:bound]:
 				if img1 != img2:
-					percentage = self.matching_percentage(img1, img2) 
+					percentage = self.matching_percentage(img1, img2)
 					img1path = self.img_info_dict[img1]['path']
 					img2path = self.img_info_dict[img2]['path']
 					img1category= self.img_info_dict[img1]['category']
 					img2category= self.img_info_dict[img2]['category']
 					if percentage < 50.0:
-						mismatches.append((img1path, img2path, img1category, img2category, percentage))
+						mismatches.append((img1path, img2path, img1category, img2category, 0, percentage))
 					else:
-						matches.append((img1path, img2path, img1category, img2category, percentage))
+						matches.append((img1path, img2path, img1category, img2category, 1, percentage))
+
 		return matches, mismatches
-
-		
-
-
-
-
