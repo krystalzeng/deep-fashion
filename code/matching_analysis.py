@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class matching_analysis():
 
@@ -140,7 +141,7 @@ class matching_analysis():
 	def generate_matches(self, bound):
 		matches = []
 		mismatches = []
-
+		random.shuffle(self.unique_image_urls)
 		for img1 in self.unique_image_urls[:bound]:
 			for img2 in self.unique_image_urls[:bound]:
 				if img1 != img2:
@@ -154,4 +155,4 @@ class matching_analysis():
 					else:
 						matches.append((img1path, img2path, img1category, img2category, 1, percentage))
 
-		return matches, mismatches
+		return matches, mismatches, matches + mismatches
