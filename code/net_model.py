@@ -4,7 +4,7 @@ flags = tf.app.flags
 FLAGS = flags.FLAGS
 
 
-def mynet(input, reuse=False):
+def mynet(input, reuse=False, embedding_size=100):
     with tf.name_scope("model"):
         with tf.variable_scope("conv1") as scope:
             net = tf.contrib.layers.conv2d(input, 32, [7, 7], activation_fn=tf.nn.relu, padding='SAME',
@@ -31,10 +31,9 @@ def mynet(input, reuse=False):
             net = tf.contrib.layers.max_pool2d(net, [2, 2], padding='SAME')
 
         with tf.variable_scope("conv5") as scope:
-            net = tf.contrib.layers.conv2d(net, 2, [1, 1], activation_fn=None, padding='SAME',
+            net = tf.contrib.layers.conv2d(net, embedding_size, [1, 1], activation_fn=None, padding='SAME',
                                            weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                                            scope=scope, reuse=reuse)
-            net = tf.contrib.layers.max_pool2d(net, [2, 2], padding='SAME')
 
         net = tf.contrib.layers.flatten(net)
 
