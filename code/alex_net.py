@@ -14,7 +14,7 @@ from tensorflow.python.ops import nn_ops
 from tensorflow.python.ops import variable_scope
 
 trunc_normal = lambda stddev: init_ops.truncated_normal_initializer(0.0, stddev)
-
+print("hi")
 
 def alexnet_v2_arg_scope(weight_decay=0.0005):
   with arg_scope(
